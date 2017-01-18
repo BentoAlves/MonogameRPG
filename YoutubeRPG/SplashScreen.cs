@@ -25,7 +25,7 @@ namespace YoutubeRPG
             base.Update(gameTime);
             Image.Update(gameTime);
 
-            if (InputManager.Instance.KeyPressed(Keys.Enter, Keys.Z)) ScreenManager.Instance.ChangeScreens("SplashScreen");
+            if (InputManager.Instance.KeyPressed(Keys.Enter, Keys.Z)) ScreenManager.Instance.ChangeScreens("TitleScreen");
         }
 
         public override void Draw(SpriteBatch spriteBatch)
