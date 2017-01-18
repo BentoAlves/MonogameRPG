@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 
 using Microsoft.Xna.Framework;
@@ -12,7 +9,7 @@ namespace YoutubeRPG
 {
     public class GameScreen
     {
-        protected ContentManager content;
+        protected ContentManager Content;
         [XmlIgnore]
         public Type Type;
 
@@ -20,19 +17,18 @@ namespace YoutubeRPG
 
         public GameScreen()
         {
-            Type = this.GetType();
-            XmlPath = "Load/" + Type.ToString().Replace("YoutubeRPG.", "") + ".xml";
+            Type = GetType();
+            XmlPath = "../../../../Load/" + Type.ToString().Replace("YoutubeRPG.", "") + ".xml";
         }
 
         public virtual void LoadContent()
         {
-            content = new ContentManager(
-                ScreenManager.Instance.Content.ServiceProvider, "Content");
+            Content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
         }
 
         public virtual void UnloadContent()
         {
-            content.Unload();
+            Content.Unload();
         }
 
         public virtual void Update(GameTime gameTime)

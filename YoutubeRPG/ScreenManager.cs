@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 
@@ -13,14 +10,15 @@ namespace YoutubeRPG
 {
     public class ScreenManager
     {
-        private static ScreenManager instance;
+        private static ScreenManager _instance;
         [XmlIgnore]
         public Vector2 Dimensions { private set; get; }
         [XmlIgnore]
         public ContentManager Content { private set; get; }
-        XmlManager<GameScreen> xmlGameScreenManager;
 
-        GameScreen currentScreen, newScreen;
+        readonly XmlManager<GameScreen> _xmlGameScreenManager;
+
+        GameScreen _currentScreen, _newScreen;
         [XmlIgnore]
         public GraphicsDevice GraphicsDevice;
         [XmlIgnore]
@@ -28,86 +26,77 @@ namespace YoutubeRPG
 
         public Image Image;
         [XmlIgnore]
-        public bool IsTransitioning { get; private set; }
+        public bool IsTransitioning { get; set; }
 
         public static ScreenManager Instance
         {
             get
             {
-                if (instance == null)
-                {
-                    XmlManager<ScreenManager> xml = new XmlManager<ScreenManager>();
-                    instance = xml.Load("Load/ScreenManager.xml");
-                }
-
-                return instance;
+                if (_instance != null) return _instance;
+                _instance = new XmlManager<ScreenManager>().Load("../../../../Load/ScreenManager.xml");
+                return _instance;
             }
         }
 
         public void ChangeScreens(string screenName)
         {
-            newScreen = (GameScreen)Activator.CreateInstance(Type.GetType("YoutubeRPG." + screenName));
+            _newScreen = (GameScreen)Activator.CreateInstance(Type.GetType($"YoutubeRPG.{screenName}"));
             Image.IsActive = true;
             Image.FadeEffect.Increase = true;
             Image.Alpha = 0.0f;
             IsTransitioning = true;
         }
 
-        void Transition(GameTime gameTime)
+        private void Transition(GameTime gameTime)
         {
-            if (IsTransitioning)
+            if (!IsTransitioning) return;
+            Image.Update(gameTime);
+            if (Image.Alpha == 1.0f)
             {
-                Image.Update(gameTime);
-                if (Image.Alpha == 1.0f)
-                {
-                    currentScreen.UnloadContent();
-                    currentScreen = newScreen;
-                    xmlGameScreenManager.Type = currentScreen.Type;
-                    if (File.Exists(currentScreen.XmlPath))
-                        currentScreen = xmlGameScreenManager.Load(currentScreen.XmlPath);
-                    currentScreen.LoadContent();
-                }
-                else if (Image.Alpha == 0.0f)
-                {
-                    Image.IsActive = false;
-                    IsTransitioning = false;
-                }
+                _currentScreen.UnloadContent();
+                _currentScreen = _newScreen;
+                _xmlGameScreenManager.Type = _currentScreen.Type;
+                if (File.Exists(_currentScreen.XmlPath)) _currentScreen = _xmlGameScreenManager.Load(_currentScreen.XmlPath);
+                _currentScreen.LoadContent();
+            }
+            else if (Image.Alpha == 0.0f)
+            {
+                Image.IsActive = false;
+                IsTransitioning = false;
             }
         }
 
-        public ScreenManager()
+        private ScreenManager()
         {
             Dimensions = new Vector2(640, 480);
-            currentScreen = new SplashScreen();
-            xmlGameScreenManager = new XmlManager<GameScreen>();
-            xmlGameScreenManager.Type = currentScreen.Type;
-            currentScreen = xmlGameScreenManager.Load("Load/SplashScreen.xml");
+            _currentScreen = new SplashScreen();
+            _xmlGameScreenManager = new XmlManager<GameScreen> { Type = _currentScreen.Type };
+            _currentScreen = _xmlGameScreenManager.Load("../../../../Load/SplashScreen.xml");
         }
 
-        public void LoadContent(ContentManager Content)
+        public void LoadContent(ContentManager content)
         {
-            this.Content = new ContentManager(Content.ServiceProvider, "Content");
-            currentScreen.LoadContent();
+            Content = new ContentManager(content.ServiceProvider, "Content");
+            _currentScreen.LoadContent();
             Image.LoadContent();
         }
 
         public void UnloadContent()
         {
-            currentScreen.UnloadContent();
+            _currentScreen.UnloadContent();
             Image.UnloadContent();
         }
 
         public void Update(GameTime gameTime)
         {
-            currentScreen.Update(gameTime);
+            _currentScreen.Update(gameTime);
             Transition(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            currentScreen.Draw(spriteBatch);
-            if (IsTransitioning)
-                Image.Draw(spriteBatch);
+            _currentScreen.Draw(spriteBatch);
+            if (IsTransitioning) Image.Draw(spriteBatch);
         }
     }
 }

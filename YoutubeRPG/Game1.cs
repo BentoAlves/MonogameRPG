@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace YoutubeRPG
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        readonly GraphicsDeviceManager _graphics;
+        SpriteBatch _spriteBatch;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -32,8 +26,9 @@ namespace YoutubeRPG
         /// </summary>
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = (int)YoutubeRPG.ScreenManager.Instance.Dimensions.X;
-            graphics.ApplyChanges();
+            _graphics.PreferredBackBufferWidth = (int)ScreenManager.Instance.Dimensions.X;
+            _graphics.PreferredBackBufferHeight = (int)ScreenManager.Instance.Dimensions.Y;
+            _graphics.ApplyChanges();
             base.Initialize();
         }
 
@@ -44,9 +39,9 @@ namespace YoutubeRPG
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             ScreenManager.Instance.GraphicsDevice = GraphicsDevice;
-            ScreenManager.Instance.SpriteBatch = spriteBatch;
+            ScreenManager.Instance.SpriteBatch = _spriteBatch;
             ScreenManager.Instance.LoadContent(Content);
         }
 
@@ -67,9 +62,7 @@ namespace YoutubeRPG
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || 
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
-                this.Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             ScreenManager.Instance.Update(gameTime);
 
@@ -84,9 +77,9 @@ namespace YoutubeRPG
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin();
-            ScreenManager.Instance.Draw(spriteBatch);
-            spriteBatch.End();
+            _spriteBatch.Begin();
+            ScreenManager.Instance.Draw(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

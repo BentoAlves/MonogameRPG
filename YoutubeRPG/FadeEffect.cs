@@ -12,15 +12,18 @@ namespace YoutubeRPG
         public float FadeSpeed;
         public bool Increase;
 
+        private Image _image;
+
         public FadeEffect()
         {
             FadeSpeed = 1;
             Increase = false;
         }
 
-        public override void LoadContent(ref Image Image)
+        public override void LoadContent(ref Image image)
         {
-            base.LoadContent(ref Image);
+            base.LoadContent(ref image);
+            _image = image;
         }
 
         public override void UnloadContent()
@@ -31,26 +34,24 @@ namespace YoutubeRPG
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (image.IsActive)
+            if (_image.IsActive)
             {
-                if (!Increase)
-                    image.Alpha -= FadeSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                else
-                    image.Alpha += FadeSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                var totalSeconds = (float) gameTime.ElapsedGameTime.TotalSeconds;
+                if (!Increase) _image.Alpha -= FadeSpeed * totalSeconds;
+                else _image.Alpha += FadeSpeed * totalSeconds;
 
-                if (image.Alpha < 0.0f)
+                if (_image.Alpha < 0.0f)
                 {
                     Increase = true;
-                    image.Alpha = 0.0f;
+                    _image.Alpha = 0.0f;
                 }
-                else if (image.Alpha > 1.0f)
+                else if (_image.Alpha > 1.0f)
                 {
                     Increase = false;
-                    image.Alpha = 1.0f;
+                    _image.Alpha = 1.0f;
                 }
             }
-            else
-                image.Alpha = 1.0f;
+            else _image.Alpha = 1.0f;
         }
     }
 }

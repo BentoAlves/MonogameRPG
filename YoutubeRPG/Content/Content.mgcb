@@ -13,3 +13,38 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/Orbitron.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Orbitron.spritefont
+
+#begin Load/SplashScreen.xml
+/importer:XmlImporter
+/processor:PassThroughProcessor
+/build:Load/SplashScreen.xml
+
+#begin ScreenManager/FadeIn.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ScreenManager/FadeIn.png
+
+#begin SplashScreen/Gamercrest.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SplashScreen/Gamercrest.png
+

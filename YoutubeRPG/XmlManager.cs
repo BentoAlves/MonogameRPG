@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 
@@ -21,7 +18,7 @@ namespace YoutubeRPG
             T instance;
             using (TextReader reader = new StreamReader(path))
             {
-                XmlSerializer xml = new XmlSerializer(Type);
+                var xml = new XmlSerializer(Type);
                 instance = (T)xml.Deserialize(reader);
             }
             return instance;
@@ -31,7 +28,7 @@ namespace YoutubeRPG
         {
             using (TextWriter writer = new StreamWriter(path))
             {
-                XmlSerializer xml = new XmlSerializer(Type);
+                var xml = new XmlSerializer(Type);
                 xml.Serialize(writer, obj);
             }
         }

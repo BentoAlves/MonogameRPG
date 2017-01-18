@@ -9,54 +9,44 @@ namespace YoutubeRPG
 {
     public class InputManager
     {
-        KeyboardState currentKeyState, prevKeyState;
+        KeyboardState _currentKeyState, _prevKeyState;
 
-        private static InputManager instance;
+        private static InputManager _instance;
 
         public static InputManager Instance
         {
-            get
-            {
-                if (instance == null)
-                    instance = new InputManager();
-
-                return instance;
-            }
+            get { return _instance ?? (_instance = new InputManager()); }
         }
 
         public void Update()
         {
-            prevKeyState = currentKeyState;
-            if (!ScreenManager.Instance.IsTransitioning)
-                currentKeyState = Keyboard.GetState();
+            _prevKeyState = _currentKeyState;
+            if (!ScreenManager.Instance.IsTransitioning) _currentKeyState = Keyboard.GetState();
         }
 
         public bool KeyPressed(params Keys[] keys)
         {
-            foreach (Keys key in keys)
+            foreach (var key in keys)
             {
-                if (currentKeyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key))
-                    return true;
+                if (_currentKeyState.IsKeyDown(key) && _prevKeyState.IsKeyUp(key)) return true;
             }
             return false;
         }
 
         public bool KeyReleased(params Keys[] keys)
         {
-            foreach (Keys key in keys)
+            foreach (var key in keys)
             {
-                if (currentKeyState.IsKeyUp(key) && prevKeyState.IsKeyDown(key))
-                    return true;
+                if (_currentKeyState.IsKeyUp(key) && _prevKeyState.IsKeyDown(key)) return true;
             }
             return false;
         }
 
         public bool KeyDown(params Keys[] keys)
         {
-            foreach (Keys key in keys)
+            foreach (var key in keys)
             {
-                if (currentKeyState.IsKeyDown(key))
-                    return true;
+                if (_currentKeyState.IsKeyDown(key)) return true;
             }
             return false;
         }
